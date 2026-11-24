@@ -134,10 +134,16 @@ fill('fm',uniq(DATA.map(function(r){return r.m})).sort(),'كل المواد');
 fill('fs',uniq(DATA.map(function(r){return r.s})).sort(),'كل السداسيات');
 fill('fy',uniq(DATA.map(function(r){return r.y})).sort().reverse(),'كل السنوات');
 fill('ft',['عادية','استدراكية','عادية + استدراكية','غير محدد'],'كل الدورات');
-fill('fp',uniq([].concat.apply([],DATA.map(function(r){return r.ps}))).sort(),'كل الأساتذة');
+function updProfs(){var m=$('fm').value,s=$('fs').value,y=$('fy').value,t=$('ft').value,cur=$('fp').value;
+ var rs=DATA.filter(function(r){return(!TR||r.tr===TR)&&(!m||r.m===m)&&(!s||r.s===s)&&(!y||r.y===y)&&(!t||r.t===t)});
+ var ps=uniq([].concat.apply([],rs.map(function(r){return r.ps}))).sort();
+ if(cur&&ps.indexOf(cur)<0)cur='';
+ fill('fp',ps,'كل الأساتذة ('+ps.length+')');$('fp').value=cur}
+updProfs();
 $('stat').textContent=DATA.length+' ورقة · '+uniq(DATA.map(function(r){return r.m})).length+' مادة';
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function render(){
+ updProfs();
  var q=$('q').value.trim().toLowerCase(),m=$('fm').value,s=$('fs').value,y=$('fy').value,t=$('ft').value,p=$('fp').value;
  var rows=DATA.filter(function(r){
   if(TR&&r.tr!==TR)return false;if(m&&r.m!==m)return false;if(s&&r.s!==s)return false;if(y&&r.y!==y)return false;if(t&&r.t!==t)return false;
